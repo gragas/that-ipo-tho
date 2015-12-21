@@ -3,10 +3,15 @@ I'm going to try to see if I can use machine learning and sentiment analysis to 
 
 # Requirements and Dependences
 
-* Python 3
-* scikit-learn
+### Python 3
+* beautifulsoup4
+* matplotlib
 * nltk
+* numpy
 * requests
+* scikit-learn
+* scipy
+* twython
 
 # Authors
 
