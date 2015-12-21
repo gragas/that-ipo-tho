@@ -24,21 +24,31 @@ def plot(x, y, x_label, y_label):
     first_legend_label = "Data point"
     second_legend_label = "Prediction of {} given {}".format(
         y_label.lower()[:-1], x_label.lower()[:-1])
+    third_legend_label = "Positive return line"
     # plot the data points as a scatter plot
     plt.plot(x, y, "ro", label=first_legend_label)
     # plot the best fit values as a line
     plt.plot(x, best_fit_values, "b", label=second_legend_label)
-    # display the legend in the upper left
-    plt.legend([first_legend_label, second_legend_label], loc=2)
     # calculate the x and y position of the r^2 value text
     y_min, y_max = plt.gca().get_ylim()
     x_min, x_max = plt.gca().get_xlim()
     y_range = y_max - y_min
     x_range = x_max - x_min
+    # create the positive return line
+    N = 31
+    positive_return_line_x = [x_min + (_ / (N - 1)) * x_range for _ in range(N)]
+    positive_return_line_y = [0.0 for _ in range(N)]
+    # plot the positive return line
+    plt.plot(positive_return_line_x, positive_return_line_y,
+             "r_", label=third_legend_label)
     text_x_pos, text_y_pos = (x_min + 1.005 * x_range, y_min + 0.5 * y_range)
     r_squared = r_value * r_value
     # display the r^2 value text
     plt.text(text_x_pos, text_y_pos, r"$r^{2}=$" + "{:.2f}".format(r_squared))
+    # display the legend in the upper left
+    plt.legend(
+        [first_legend_label, second_legend_label, third_legend_label],
+        loc=2)
     # annotate the data points
     for label, _x, _y in zip(collected_folder_names, x, y):
         plt.annotate(
