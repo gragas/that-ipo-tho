@@ -8,5 +8,6 @@ except ImportError:
 setup(name="ipo",
       author="Thomas D. Fischer",
       version="0.0.1",
-      py_modules=["ipo",],
+      py_modules=["ipo",
+                  "ipo_plot",],
       )
