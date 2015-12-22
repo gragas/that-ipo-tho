@@ -1,5 +1,5 @@
 # ML + Sentiment Analysis + IPO = ???
-I'm going to try to see if I can use machine learning and sentiment analysis to predict whether a stock will rise or fall immediately after its IPO.
+I'm going to try to see if I can use machine learning and sentiment analysis to predict whether a stock will be up or down seven days after its IPO.
 
 # Requirements and Dependences
 
