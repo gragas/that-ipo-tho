@@ -6,12 +6,12 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 
-collected_percent_deltas = dict()
-collected_negative_scores = dict()
-collected_positive_scores = dict()
+cllctd_percent_deltas = dict()
+cllctd_negative_scores = dict()
+cllctd_positive_scores = dict()
 collected_folder_names = list()
 
-def plot(x, y, x_label, y_label):
+def plot(x, y, x_label, y_label, plot_positive_return_line=True):
     # set the title and label the x and y axes
     plt.title("{} vs {}".format(y_label, x_label))
     plt.xlabel(x_label.lower())
@@ -34,13 +34,14 @@ def plot(x, y, x_label, y_label):
     x_min, x_max = plt.gca().get_xlim()
     y_range = y_max - y_min
     x_range = x_max - x_min
-    # create the positive return line
-    N = 31
-    positive_return_line_x = [x_min + (_ / (N - 1)) * x_range for _ in range(N)]
-    positive_return_line_y = [0.0 for _ in range(N)]
-    # plot the positive return line
-    plt.plot(positive_return_line_x, positive_return_line_y,
-             "r_", label=third_legend_label)
+    if plot_positive_return_line:
+        # create the positive return line
+        N = 31
+        positive_return_line_x = [x_min + (_ / (N - 1)) * x_range for _ in range(N)]
+        positive_return_line_y = [0.0 for _ in range(N)]
+        # plot the positive return line
+        plt.plot(positive_return_line_x, positive_return_line_y,
+                 "r_", label=third_legend_label)
     text_x_pos, text_y_pos = (x_min + 1.005 * x_range, y_min + 0.5 * y_range)
     r_squared = r_value * r_value
     # display the r^2 value text
@@ -50,7 +51,7 @@ def plot(x, y, x_label, y_label):
         [first_legend_label, second_legend_label, third_legend_label],
         loc=2)
     # annotate the data points
-    for label, _x, _y in zip(collected_folder_names, x, y):
+    for label, _x, _y in zip(list(sorted(collected_folder_names)), x, y):
         plt.annotate(
             label,
             xy = (_x, _y),
@@ -142,9 +143,9 @@ def main():
                     continue
 
             # Now that we have everything we want
-            collected_percent_deltas[folder_name] = percent_delta
-            collected_negative_scores[folder_name] = negative_score
-            collected_positive_scores[folder_name] = positive_score
+            cllctd_percent_deltas[folder_name] = percent_delta
+            cllctd_negative_scores[folder_name] = negative_score
+            cllctd_positive_scores[folder_name] = positive_score
 
         # We did it!
         collected_folder_names.append(folder_name)
@@ -152,11 +153,15 @@ def main():
             folder_name))
     
     # put our data into numpy arrays
-    percent_deltas = np.array(list(collected_percent_deltas.values()))
-    negative_scores = np.array(list(collected_negative_scores.values()))
-    positive_scores = np.array(list(collected_positive_scores.values()))
-    diff_scores = np.subtract(positive_scores, negative_scores)
-    
+    percent_deltas = np.array(
+        [cllctd_percent_deltas[_] for _ in sorted(cllctd_percent_deltas)]
+    )
+    negative_scores = np.array(
+        [cllctd_negative_scores[_] for _ in sorted(cllctd_negative_scores)]
+    )
+    positive_scores = np.array(
+        [cllctd_positive_scores[_] for _ in sorted(cllctd_positive_scores)]
+    )    
     # print out the total run time
     time_delta = time.time() - start_time
     print("SUCCESS! Total run time: {:.2f} seconds".format(time_delta))
@@ -164,7 +169,8 @@ def main():
     # plot our data
     plot(negative_scores, percent_deltas, "Negative Scores", "Percent Deltas")
     plot(positive_scores, percent_deltas, "Positive Scores", "Percent Deltas")
-    plot(diff_scores, percent_deltas, "Difference Scores", "Percent Deltas")
+    plot(negative_scores, positive_scores, "Negative Scores", "Positive Scores",
+         plot_positive_return_line=False)
     
 if __name__ == "__main__":
     main()
